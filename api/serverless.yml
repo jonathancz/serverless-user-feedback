@@ -11,7 +11,7 @@
 #
 # Happy Coding!
 
-service: serverless-user-feedback
+service: intern-user-feedback-api
 # app and org for use with dashboard.serverless.com
 #app: your-app-name
 #org: your-org-name
@@ -29,10 +29,11 @@ service: serverless-user-feedback
 provider:
   name: aws
   runtime: nodejs12.x
-  stage: dev
   region: us-east-2
   environment:
+    KONG_ROUTE_ARN: ${env:KONG_ROUTE_ARN}
     USER_FEEDBACK_TABLE_NAME: intern-user-feedback-${opt:stage, self:provider.stage}
+    INTERN_FEEDBACK_ROUTE_NAME: feedback-${opt:stage, self:provider.stage}-submitFeedback
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -71,12 +72,8 @@ provider:
 #    - exclude-me-dir/**
 
 functions:
-  getFeedback:
-    handler: getFeedback.handler
-    events:
-      - http:
-          path: userFeedback
-          method: post
+  submitFeedback:
+    handler: feedback/index.handler
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
@@ -142,6 +139,17 @@ resources:
         - AttributeName: id
           KeyType: HASH
       BillingMode: PAY_PER_REQUEST
+  KongRouteResource:
+   Type: "Custom::KongRoute"
+   Properties:
+    ServiceToken: arn:aws:lambda:us-east-2:038200024678:function:kong-route-automation-dev-kongroute
+    name: ${self:provider.environment.INTERN_FEEDBACK_ROUTE_NAME}
+    methods: ["POST", "OPTIONS"]
+    paths: ["/${opt:stage, self:provider.stage}/intern-feedback"]
+    aws_region: "us-east-2"
+
+plugins:
+  - serverless-webpack
 
 custom:
   webpack:
@@ -149,3 +157,5 @@ custom:
     includeModules: false   # Node modules configuration for packaging
     packager: 'npm'   # Packager that will be used to package your external modules
     excludeFiles: src/**/*.test.js # Provide a glob for files to ignore
+
+    
