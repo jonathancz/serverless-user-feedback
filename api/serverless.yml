@@ -145,7 +145,7 @@ resources:
     ServiceToken: arn:aws:lambda:us-east-2:038200024678:function:kong-route-automation-dev-kongroute
     name: ${self:provider.environment.INTERN_FEEDBACK_ROUTE_NAME}
     methods: ["POST", "OPTIONS"]
-    paths: ["/${opt:stage, self:provider.stage}/intern-feedback"]
+    paths: ["/${opt:stage, self:provider.stage}/intern-feedback"] 
     aws_region: "us-east-2"
 
 plugins:
