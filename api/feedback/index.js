@@ -43,7 +43,7 @@ module.exports.handler = async event => {
       // then overwrite the existing properties with the ones we're passing
       // in this case, id
       ...JSON.parse(event.body),
-      id: feedackId
+      id: feedbackId
     }
 
     log.progress('Inserting entry into table')
