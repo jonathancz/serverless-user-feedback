@@ -5,7 +5,7 @@ const cuid = require('cuid')
 module.exports.handler = async event => {
   // Create log for debugging
   const log = logger()
-  
+
   try {
     // Use cases: if event body is empty and if parameters are not provided by user
     if(!event.body) {
@@ -33,7 +33,7 @@ module.exports.handler = async event => {
       return response.error('Missing parameters')
     }
 
-    // Key for every feedback entry
+    // ID for every feedback entry
     const feedbackId = cuid()
 
     // Create entry object
@@ -53,7 +53,9 @@ module.exports.handler = async event => {
 
     // Pass in parameters
     const dynamoParams = {
+      // Specify table
       TableName: process.env.USER_FEEDBACK_TABLE_NAME,
+      // Which item to store
       Item: entry
     }
 
@@ -72,7 +74,8 @@ module.exports.handler = async event => {
     // Cloudwatch
     log.error('Something went wrong in `submitFeedback` message: ',error)
     // Console
-    return response.error('Something went wrong')
+    //return response.error('Something went wrong')
+    throw new Error(`Something went wrong`)
   }
   
 }
