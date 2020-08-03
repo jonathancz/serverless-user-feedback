@@ -75,16 +75,16 @@ provider:
 functions:
   submitFeedback:
     handler: feedback/index.handler
-    events:
-      - http:
-          path: intern-feedback
-          method: post
+    # events:
+    #   - http:
+    #       path: intern-feedback
+    #       method: post
   getFeedback:
     handler: getFeedback/index.handler
-    events:
-      - http:
-          path: intern-feedback
-          method: get
+    # events:
+    #   - http:
+    #       path: intern-feedback
+    #       method: get
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
@@ -155,7 +155,7 @@ resources:
    Properties:
     ServiceToken: arn:aws:lambda:us-east-2:038200024678:function:kong-route-automation-dev-kongroute
     name: ${self:provider.environment.INTERN_FEEDBACK_ROUTE_NAME}
-    methods: ["POST", "OPTIONS"]
+    methods: ["POST","GET", "OPTIONS"]
     paths: ["/${opt:stage, self:provider.stage}/intern-feedback"] 
     aws_region: "us-east-2"
 
