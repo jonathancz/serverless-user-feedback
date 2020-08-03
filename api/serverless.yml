@@ -38,6 +38,7 @@ provider:
     - Effect: Allow
       Action:
         - dynamodb:PutItem
+        - dynamodb:Scan
       Resource: 
       - Fn::GetAtt: [ userFeedbackTable, Arn ]
   
@@ -78,6 +79,12 @@ functions:
       - http:
           path: intern-feedback
           method: post
+  getFeedback:
+    handler: getFeedback/index.handler
+    events:
+      - http:
+          path: intern-feedback
+          method: get
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
